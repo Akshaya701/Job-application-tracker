@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} · JobTrack{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><div class="eyebrow">APPLICATION DETAILS</div><h1>{{ page_title }}</h1><p class="muted">Save the information you need for your next step.</p></div>
+  <a class="button button-outline" href="{{ url_for('dashboard') }}">Cancel</a>
+</section>
+<form method="post" class="panel form-panel">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+  <div class="form-grid">
+    <label>Company name <span class="required">*</span>
+      <input name="company" value="{{ item.company }}" maxlength="120" required placeholder="e.g. Infosys">
+    </label>
+    <label>Job role <span class="required">*</span>
+      <input name="role" value="{{ item.role }}" maxlength="120" required placeholder="e.g. Software Engineer - Fresher">
+    </label>
+    <label>Job posting URL
+      <input type="url" name="job_url" value="{{ item.job_url }}" maxlength="500" placeholder="https://…">
+    </label>
+    <label>Location / work mode
+      <input name="location" value="{{ item.location }}" maxlength="120" placeholder="e.g. Hyderabad / Hybrid">
+    </label>
+    <label>Status
+      <select name="status" required>{% for s in statuses %}<option value="{{ s }}" {% if item.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+    </label>
+    <label>Priority
+      <select name="priority" required>{% for p in priorities %}<option value="{{ p }}" {% if item.priority == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+    </label>
+    <label>Application date
+      <input type="date" name="application_date" value="{{ item.application_date }}">
+    </label>
+    <label>Next deadline
+      <input type="date" name="deadline" value="{{ item.deadline }}">
+    </label>
+    <label class="span-2">Recruiter / contact
+      <input name="contact" value="{{ item.contact }}" maxlength="160" placeholder="Name or professional contact details">
+    </label>
+    <label class="span-2">Notes
+      <textarea name="notes" rows="5" maxlength="3000" placeholder="Interview notes, referral details, preparation tasks…">{{ item.notes }}</textarea>
+    </label>
+  </div>
+  <div class="form-actions"><span class="muted small"><span class="required">*</span> Required fields</span><button class="button" type="submit">{{ submit_label }}</button></div>
+</form>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }} · JobTrack{% endblock %}
+{% block content %}
+<section class="empty-state error-state">
+  <div class="empty-icon">!</div><h1>Error {{ code }}</h1><p class="muted">{{ message }}</p>
+  <a class="button" href="{{ url_for('dashboard') if session.get('authenticated') else url_for('login') }}">Return</a>
+</section>
+{% endblock %}

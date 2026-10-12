@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Sign in · JobTrack{% endblock %}
+{% block content %}
+<section class="login-wrap">
+  <div class="login-card">
+    <div class="eyebrow">YOUR CAREER WORKSPACE</div>
+    <h1>Keep your job search organized.</h1>
+    <p class="muted">Track applications, deadlines, and interview progress in one place.</p>
+    <form method="post" class="form-stack">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      <label>Username
+        <input name="username" autocomplete="username" required autofocus>
+      </label>
+      <label>Password
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="button full-width" type="submit">Sign in</button>
+    </form>
+    <p class="hint">Local default: <code>admin</code> / <code>change-me-now</code>. Change these before any public deployment.</p>
+  </div>
+</section>
+{% endblock %}

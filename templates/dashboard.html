@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · JobTrack{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <div class="eyebrow">JOB SEARCH OVERVIEW</div>
+    <h1>Your applications</h1>
+    <p class="muted">A clear view of where every opportunity stands.</p>
+  </div>
+  <a class="button" href="{{ url_for('create_application') }}">+ New application</a>
+</section>
+
+<section class="stats-grid">
+  <article class="stat-card"><span class="stat-label">Total tracked</span><strong>{{ stats.total }}</strong><span class="stat-note">All saved applications</span></article>
+  <article class="stat-card"><span class="stat-label">In progress</span><strong>{{ stats.active }}</strong><span class="stat-note">Applied to interview</span></article>
+  <article class="stat-card"><span class="stat-label">Interviews</span><strong>{{ stats.interviews }}</strong><span class="stat-note">Interview stage</span></article>
+  <article class="stat-card"><span class="stat-label">Offers</span><strong>{{ stats.offers }}</strong><span class="stat-note">Offer received</span></article>
+</section>
+
+<section class="panel">
+  <div class="panel-heading">
+    <div><h2>Application pipeline</h2><p class="muted small">Search, filter, and manage your opportunities.</p></div>
+    <a class="button button-outline button-small" href="{{ url_for('export_csv') }}">Export CSV ↓</a>
+  </div>
+  <form class="filters" method="get">
+    <input name="q" value="{{ search }}" placeholder="Search company, role, location…" aria-label="Search applications">
+    <select name="status" aria-label="Filter by status">
+      <option value="">All statuses</option>
+      {% for s in statuses %}<option value="{{ s }}" {% if selected_status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+    <button class="button button-outline" type="submit">Apply filters</button>
+    {% if search or selected_status %}<a class="clear-link" href="{{ url_for('dashboard') }}">Clear</a>{% endif %}
+  </form>
+
+  {% if applications %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Company / role</th><th>Status</th><th>Priority</th><th>Deadline</th><th></th></tr></thead>
+      <tbody>
+      {% for item in applications %}
+        <tr>
+          <td>
+            <a class="company-link" href="{{ url_for('application_detail', application_id=item.id) }}">{{ item.company }}</a>
+            <div class="muted small">{{ item.role }}{% if item.location %} · {{ item.location }}{% endif %}</div>
+          </td>
+          <td><span class="status status-{{ item.status|lower|replace(' ', '-') }}">{{ item.status }}</span></td>
+          <td><span class="priority priority-{{ item.priority|lower }}">{{ item.priority }}</span></td>
+          <td>{% if item.deadline %}{{ item.deadline }}{% else %}<span class="muted">—</span>{% endif %}</td>
+          <td><a class="text-link" href="{{ url_for('edit_application', application_id=item.id) }}">Edit</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">↗</div>
+    <h3>No applications found</h3>
+    <p class="muted">{% if search or selected_status %}Try a different search or clear the filters.{% else %}Add your first job application to start tracking your search.{% endif %}</p>
+    {% if not search and not selected_status %}<a class="button" href="{{ url_for('create_application') }}">Add your first application</a>{% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
